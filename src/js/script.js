@@ -2,33 +2,56 @@
 {
   ('use strict');
 
-  const booksList = document.querySelector('.books-list');
-  const booksTemplate = Handlebars.compile(document.querySelector('#template-book').innerHTML);
+  const select = {
+    templateOf: {
+      book: '#template-book',
+    },
+    containerOf: {
+      booksList: '.books-list',
+    },
+    book: {
+      image: '.book__image',
+    },
+  };
+
+  const templates = {
+    books: Handlebars.compile(document.querySelector(select.templateOf.book).innerHTML),
+  };
+
+  const classNames = {
+    favorite: 'favorite',
+  };
 
   const render = function () {
+    const booksContainer = document.querySelector(select.containerOf.booksList);
+
     for (const book of dataSource.books) {
-      const generatedHTML = booksTemplate(book);
+      const generatedHTML = templates.books(book);
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
-      booksList.appendChild(generatedDOM);
+      booksContainer.appendChild(generatedDOM);
     }
   };
 
   let favoriteBooks = [];
 
   const initActions = function () {
-    const bookImages = document.querySelectorAll('.book__image');
+    const bookImages = document.querySelectorAll(select.book.image);
 
-    for (let i = 0; i < bookImages.length; i++) {
-      bookImages[i].addEventListener('dblclick', function (e) {
+    for (const image of bookImages) {
+      image.addEventListener('dblclick', function (e) {
         e.preventDefault();
-        console.log(e.target.offsetParent);
-        if (!e.target.offsetParent.classList.contains('favorite')) {
-          e.target.offsetParent.classList.add('favorite');
-          favoriteBooks.push(e.target.offsetParent.getAttribute('data-id'));
+
+        const imageContainer = e.target.offsetParent;
+        const imageContainerId = imageContainer.getAttribute('data-id');
+
+        if (!imageContainer.classList.contains(classNames.favorite)) {
+          imageContainer.classList.add(classNames.favorite);
+          favoriteBooks.push(imageContainerId);
         } else {
-          e.target.offsetParent.classList.remove('favorite');
-          favoriteBooks = favoriteBooks.filter(item => item !== e.target.offsetParent.getAttribute('data-id'));
+          imageContainer.classList.remove(classNames.favorite);
+          favoriteBooks = favoriteBooks.filter(item => item !== imageContainerId);
         }
+        // console.log(favoriteBooks);
       });
     }
   };
