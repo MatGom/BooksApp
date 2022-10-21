@@ -21,12 +21,13 @@
     for (let i = 0; i < bookImages.length; i++) {
       bookImages[i].addEventListener('dblclick', function (e) {
         e.preventDefault();
-        if (!bookImages[i].classList.contains('favorite')) {
-          this.classList.add('favorite');
-          favoriteBooks.push(this.getAttribute('data-id'));
+        console.log(e.target.offsetParent);
+        if (!e.target.offsetParent.classList.contains('favorite')) {
+          e.target.offsetParent.classList.add('favorite');
+          favoriteBooks.push(e.target.offsetParent.getAttribute('data-id'));
         } else {
-          this.classList.remove('favorite');
-          favoriteBooks = favoriteBooks.filter(item => item !== this.getAttribute('data-id'));
+          e.target.offsetParent.classList.remove('favorite');
+          favoriteBooks = favoriteBooks.filter(item => item !== e.target.offsetParent.getAttribute('data-id'));
         }
       });
     }
