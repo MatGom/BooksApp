@@ -21,6 +21,7 @@
 
   const classNames = {
     favorite: 'favorite',
+    hidden: 'hidden',
   };
 
   const render = function () {
@@ -62,17 +63,35 @@
     bookFilter.addEventListener('click', function (e) {
       const filter = e.target;
       if (filter.tagName == 'INPUT' && filter.type == 'checkbox' && filter.name == 'filter') {
-        console.log(filter.value);
         if (filter.checked == true) {
           filters.push(filter.value);
-          console.log(filters.indexOf('adults'));
-          console.log(filters.indexOf('nonFiction'));
         } else if (filter.checked == false) {
           filters.splice(filters.indexOf(filter.value), 1);
         }
       }
-      console.log(filters);
+      filterBooks();
     });
+  };
+
+  const filterBooks = function () {
+    for (const book of dataSource.books) {
+      let shouldBeHidden = false;
+
+      for (const filter of filters) {
+        if (!book.details[filter]) {
+          shouldBeHidden = true;
+          break;
+        }
+      }
+
+      const hideBook = document.querySelector(`.book__image[data-id="${book.id}"]`);
+
+      if (shouldBeHidden == true) {
+        hideBook.classList.add(classNames.hidden);
+      } else {
+        hideBook.classList.remove(classNames.hidden);
+      }
+    }
   };
 
   render();
