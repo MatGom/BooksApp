@@ -8,6 +8,7 @@
     },
     containerOf: {
       booksList: '.books-list',
+      filters: '.filters',
     },
     book: {
       image: '.book__image',
@@ -33,6 +34,7 @@
   };
 
   let favoriteBooks = [];
+  const filters = [];
 
   const initActions = function () {
     const bookImages = document.querySelectorAll(select.book.image);
@@ -54,6 +56,23 @@
         // console.log(favoriteBooks);
       });
     }
+
+    const bookFilter = document.querySelector(select.containerOf.filters);
+
+    bookFilter.addEventListener('click', function (e) {
+      const filter = e.target;
+      if (filter.tagName == 'INPUT' && filter.type == 'checkbox' && filter.name == 'filter') {
+        console.log(filter.value);
+        if (filter.checked == true) {
+          filters.push(filter.value);
+          console.log(filters.indexOf('adults'));
+          console.log(filters.indexOf('nonFiction'));
+        } else if (filter.checked == false) {
+          filters.splice(filters.indexOf(filter.value), 1);
+        }
+      }
+      console.log(filters);
+    });
   };
 
   render();
